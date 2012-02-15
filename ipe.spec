@@ -6,6 +6,7 @@ License:	GPL v3
 Group:		X11/Applications/Graphics
 Source0:	http://downloads.sourceforge.net/ipe7/%{name}-%{version}-src.tar.gz
 # Source0-md5:	887f65359d60e184a446cbe77def5176
+Patch0:		%{name}-ipeletdir.patch
 URL:		http://ipe7.sourceforge.net/
 BuildRequires:	QtCore-devel
 BuildRequires:	QtGui-devel
@@ -44,14 +45,16 @@ This package provides header files for Ipe libraries.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %{__sed} -i -e 's/lua5.1/lua51/g' src/config.mak
 
 %build
 %{__make} -C src \
 	IPEPREFIX=%{_prefix} \
+	IPELIBDIR=%{_libdir} \
 	CXX="%{__cxx}" \
-	CXXFLAGS="%{rpmcxxflags}" \
+	CXXFLAGS="%{rpmcxxflags} -fPIC" \
 	IPE_USE_ICONV="-DIPE_USE_ICONV"
 
 %install
@@ -59,7 +62,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} -C src install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
-	IPEPREFIX=%{_prefix}
+	IPEPREFIX=%{_prefix} \
+	IPELIBDIR=%{_libdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT

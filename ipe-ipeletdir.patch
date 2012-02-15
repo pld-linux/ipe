@@ -1,0 +1,11 @@
+--- ipe-7.1.2/src/config.mak.orig	2012-02-15 14:45:19.047045221 +0100
++++ ipe-7.1.2/src/config.mak	2012-02-15 14:46:08.249274100 +0100
+@@ -137,7 +137,7 @@ IPELIBDIR  = $(IPEPREFIX)/lib
+ IPEHEADERDIR = $(IPEPREFIX)/include
+ #
+ # Where Ipelets will be installed:
+-IPELETDIR = $(IPEPREFIX)/lib/ipe/$(IPEVERS)/ipelets
++IPELETDIR = $(IPELIBDIR)/ipe/$(IPEVERS)/ipelets
+ #
+ # Where Lua code will be installed
+ # (This is the part of the Ipe program written in the Lua language)
