@@ -1,23 +1,31 @@
+# TODO: QtSpell-qt5
 Summary:	Drawing editor for creating figures in PDF or PostScript formats
 Summary(pl.UTF-8):	Edytor do tworzenia rysunków w formacie PDF i PostScript
 Name:		ipe
-Version:	7.1.2
+Version:	7.2.26
 Release:	1
 License:	GPL v3
 Group:		X11/Applications/Graphics
-Source0:	https://downloads.sourceforge.net/ipe7/%{name}-%{version}-src.tar.gz
-# Source0-md5:	887f65359d60e184a446cbe77def5176
+#Source0Download: https://github.com/otfried/ipe/releases  # for 7.2.27+
+#Source0Download: https://github.com/otfried/old-ipe-releases/releases
+Source0:	https://github.com/otfried/old-ipe-releases/releases/download/v%{version}/%{name}-%{version}-src.tar.gz
+# Source0-md5:	cac0aa5510bb2b47cd133e81a5e7c222
 Patch0:		%{name}-ipeletdir.patch
 URL:		https://ipe.otfried.org/
-BuildRequires:	QtCore-devel >= 4
-BuildRequires:	QtGui-devel >= 4
+BuildRequires:	Qt5Core-devel >= 5
+BuildRequires:	Qt5Gui-devel >= 5
+BuildRequires:	Qt5Widgets-devel >= 5
 BuildRequires:	cairo-devel
+BuildRequires:	curl-devel
 BuildRequires:	freetype-devel >= 2
+BuildRequires:	gsl-devel
 BuildRequires:	gtk+2-devel >= 1:2.0
+BuildRequires:	libpng-devel
+BuildRequires:	libspiro-devel
 BuildRequires:	libstdc++-devel
-BuildRequires:	lua51-devel >= 5.1
+BuildRequires:	lua54-devel >= 5.4
 BuildRequires:	pkgconfig
-BuildRequires:	qt4-build >= 4
+BuildRequires:	qt5-build >= 5
 BuildRequires:	sed >= 4.0
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}-%{release}
@@ -64,17 +72,19 @@ Ten pakiet zawiera pliki nagłówkowe bibliotek Ipe.
 %setup -q
 %patch0 -p1
 
-%{__sed} -i -e 's/lua5.1/lua51/g' src/config.mak
 %{__sed} -i -e '1s,/usr/bin/env ipescript,%{_bindir}/ipescript,' scripts/*.lua
 
 %build
+CPPFLAGS="%{rpmcppflags}" \
+CXXFLAGS="%{rpmcxxflags}" \
+LDFLAGS="%{rpmldflags}" \
 %{__make} -C src \
 	IPEPREFIX=%{_prefix} \
 	IPELIBDIR=%{_libdir} \
 	CXX="%{__cxx}" \
-	CXXFLAGS="%{rpmcxxflags} -fPIC" \
-	IPE_USE_ICONV="-DIPE_USE_ICONV" \
-	luatest=
+	IPE_NO_SPELLCHECK=1 \
+	LUA_PACKAGE=lua5.4 \
+	MOC=moc-qt5
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -82,8 +92,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -C src install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT \
 	IPEPREFIX=%{_prefix} \
-	IPELIBDIR=%{_libdir} \
-	luatest=
+	IPELIBDIR=%{_libdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -96,16 +105,17 @@ rm -rf $RPM_BUILD_ROOT
 %doc news.txt readme.txt
 %attr(755,root,root) %{_bindir}/ipe
 %attr(755,root,root) %{_bindir}/ipe6upgrade
+%attr(755,root,root) %{_bindir}/ipecurl
 %attr(755,root,root) %{_bindir}/ipeextract
+%attr(755,root,root) %{_bindir}/ipepresenter
 %attr(755,root,root) %{_bindir}/iperender
+%attr(755,root,root) %{_bindir}/iperender-par
 %attr(755,root,root) %{_bindir}/ipescript
 %attr(755,root,root) %{_bindir}/ipetoipe
-%attr(755,root,root) %{_bindir}/ipeview
 %dir %{_libdir}/ipe
-%dir %{_libdir}/ipe/7.1.2
-%dir %{_libdir}/ipe/7.1.2/ipelets
-%attr(755,root,root) %{_libdir}/ipe/7.1.2/ipelets/image.so
-%{_libdir}/ipe/7.1.2/ipelets/*.lua
+%dir %{_libdir}/ipe/%{version}
+%dir %{_libdir}/ipe/%{version}/ipelets
+%{_libdir}/ipe/%{version}/ipelets/*.lua
 %{_datadir}/ipe
 %{_mandir}/man1/ipe.1*
 %{_mandir}/man1/ipe6upgrade.1*
@@ -116,11 +126,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libipe.so.7.1.2
-%attr(755,root,root) %{_libdir}/libipecairo.so.7.1.2
-%attr(755,root,root) %{_libdir}/libipecanvas.so.7.1.2
-%attr(755,root,root) %{_libdir}/libipelua.so.7.1.2
-%attr(755,root,root) %{_libdir}/libipeui.so.7.1.2
+%attr(755,root,root) %{_libdir}/libipe.so.%{version}
+%attr(755,root,root) %{_libdir}/libipecairo.so.%{version}
+%attr(755,root,root) %{_libdir}/libipecanvas.so.%{version}
+%attr(755,root,root) %{_libdir}/libipelua.so.%{version}
+%attr(755,root,root) %{_libdir}/libipeui.so.%{version}
 
 %files devel
 %defattr(644,root,root,755)
