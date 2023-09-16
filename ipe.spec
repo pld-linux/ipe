@@ -1,9 +1,12 @@
-# TODO: QtSpell-qt5
+#
+# Conditional build:
+%bcond_without	qtspell	# QtSpell spell-checking support
+
 Summary:	Drawing editor for creating figures in PDF or PostScript formats
 Summary(pl.UTF-8):	Edytor do tworzenia rysunków w formacie PDF i PostScript
 Name:		ipe
 Version:	7.2.26
-Release:	1
+Release:	2
 License:	GPL v3
 Group:		X11/Applications/Graphics
 #Source0Download: https://github.com/otfried/ipe/releases  # for 7.2.27+
@@ -26,6 +29,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	lua54-devel >= 5.4
 BuildRequires:	pkgconfig
 BuildRequires:	qt5-build >= 5
+%{?with_qtspell:BuildRequires:	qtspell-qt5-devel}
 BuildRequires:	sed >= 4.0
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}-%{release}
@@ -82,7 +86,7 @@ LDFLAGS="%{rpmldflags}" \
 	IPEPREFIX=%{_prefix} \
 	IPELIBDIR=%{_libdir} \
 	CXX="%{__cxx}" \
-	IPE_NO_SPELLCHECK=1 \
+	%{!?with_qtspell:IPE_NO_SPELLCHECK=1} \
 	LUA_PACKAGE=lua5.4 \
 	MOC=moc-qt5
 
