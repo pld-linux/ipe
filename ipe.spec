@@ -6,10 +6,10 @@ Summary:	Drawing editor for creating figures in PDF or PostScript formats
 Summary(pl.UTF-8):	Edytor do tworzenia rysunków w formacie PDF i PostScript
 Name:		ipe
 Version:	7.2.26
-Release:	2
+Release:	3
 License:	GPL v3
 Group:		X11/Applications/Graphics
-#Source0Download: https://github.com/otfried/ipe/releases  # for 7.2.27+
+#Source0Download: https://github.com/otfried/ipe/releases  # for 7.2.27+, qt6 based
 #Source0Download: https://github.com/otfried/old-ipe-releases/releases
 Source0:	https://github.com/otfried/old-ipe-releases/releases/download/v%{version}/%{name}-%{version}-src.tar.gz
 # Source0-md5:	cac0aa5510bb2b47cd133e81a5e7c222
